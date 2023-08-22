@@ -21,6 +21,7 @@ namespace uk.co.husain.abbas.nfocus.POMPages
         private IWebElement _total => _driver.FindElement(By.CssSelector("#post-5 > div > div > div.cart-collaterals > div > table > tbody > tr.order-total > td > strong > span > bdi"));
         private IWebElement _subTotal => _driver.FindElement(By.CssSelector("#post-5 > div > div > div.cart-collaterals > div > table > tbody > tr.cart-subtotal > td > span > bdi"));
         private IWebElement _proceedToCheckout => _driver.FindElement(By.CssSelector("#post-5 > div > div > div.cart-collaterals > div > div > a"));
+        private IWebElement _discount => _driver.FindElement(By.CssSelector("#post-5 > div > div > div.cart-collaterals > div > table > tbody > tr.cart-discount.coupon-edgewords > td > span"));
         public void enterCoupon()
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
@@ -41,9 +42,12 @@ namespace uk.co.husain.abbas.nfocus.POMPages
             total = total.Replace("£", "");
             string subTotal = _subTotal.Text;
             subTotal = subTotal.Replace("£", "");
+            string discount = _discount.Text;
+            discount = discount.Replace("£", "");
             decimal total1 = Convert.ToDecimal(total);
             decimal subTotal1 = Convert.ToDecimal(subTotal);
-            decimal expectedTotal = subTotal1 *0.85m + 3.95m;
+            decimal discount1 = Convert.ToDecimal(discount);
+            decimal expectedTotal = subTotal1 -discount1 + 3.95m;
             return expectedTotal;
         }
         public decimal retrieveTotal() 
