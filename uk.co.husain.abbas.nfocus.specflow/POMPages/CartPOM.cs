@@ -27,7 +27,7 @@ namespace uk.co.husain.abbas.nfocus.POMPages
             IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
             js.ExecuteScript("window.scrollBy(0,1450)", "");
             _coupon.SendKeys("edgewords");
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             
         }
         public void applyCoupon()

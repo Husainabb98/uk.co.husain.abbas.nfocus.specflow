@@ -50,7 +50,7 @@ namespace uk.co.husain.abbas.nfocus.specflow.StepDefinitions
         {
             CartPOM cart = new CartPOM(_driver);
             cart.enterCoupon();
-            Thread.Sleep(5000);
+            Thread.Sleep(500);
             cart.applyCoupon();
             decimal expectedTotal = cart.retrieveExpectedTotal();
             decimal actualTotal = cart.retrieveTotal();
