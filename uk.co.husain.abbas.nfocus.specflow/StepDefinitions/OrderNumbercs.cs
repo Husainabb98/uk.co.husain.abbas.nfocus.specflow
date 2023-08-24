@@ -30,10 +30,11 @@ namespace uk.co.husain.abbas.nfocus.specflow.StepDefinitions
 
 
             ShopPOM shop = new ShopPOM(_driver);
-            shop.addAndViewCart();
+            shop.addToCart("Cap");
+            shop.viewCart();
 
             CartPOM cart = new CartPOM(_driver);
-            cart.enterCoupon();
+            cart.enterCoupon(""); //need to fix
             cart.applyCoupon();
             cart.proceedToCheckOut();
         }

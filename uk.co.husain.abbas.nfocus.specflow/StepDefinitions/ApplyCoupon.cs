@@ -19,43 +19,46 @@ namespace uk.co.husain.abbas.nfocus.specflow.StepDefinitions
         {
             _scenarioContext = scenarioContext;
         }
-        [Given(@"that i am logged in")]
-        public void GivenThatIAmLoggedIn()
+        [Given(@"that the user is logged in")]
+        public void GivenThatTheUserIsLoggedIn()
         {
             LoginPagePOM login = new LoginPagePOM(_driver);
             bool wasLoginSuccessful = login.LoginWithValidCredentials("hee@test.co.uk", "Testing123456!");
         }
 
-        [When(@"I have items in cart")]
-        public void WhenIHaveItemsInCart()
+        [Given(@"the user has '([^']*)' in the cart")]
+        public void GivenTheUserHasInTheCart(string item)
         {
             MyAccountPOM myAccount = new MyAccountPOM(_driver);
 
             myAccount.shop();
             Thread.Sleep(500);
 
-            
-        }
-
-        [When(@"i navigate to the cart page and click apply coupon")]
-        public void WhenINavigateToTheCartPageAndClickApplyCoupon()
-        {
             ShopPOM shop = new ShopPOM(_driver);
-            shop.addAndViewCart();
-            Thread.Sleep(500);
+            shop.addToCart(item);
+            shop.viewCart();
+
         }
 
-        [Then(@"the discount should be applied")]
-        public void ThenTheDiscountShouldBeApplied()
+
+
+        [When(@"the user applies the coupon '([^']*)'")]
+        public void WhenTheUserAppliesTheCoupon(string discount)
         {
             CartPOM cart = new CartPOM(_driver);
-            cart.enterCoupon();
-            Thread.Sleep(500);
+            cart.enterCoupon(discount);
             cart.applyCoupon();
-            decimal expectedTotal = cart.retrieveExpectedTotal();
-            decimal actualTotal = cart.retrieveTotal();
-            Assert.That(expectedTotal, Is.EqualTo(actualTotal),
-                "Didn't get the expected total");
+        }
+
+
+        [Then(@"the discount '([^']*)'% should be applied")]
+        public void ThenTheDiscountShouldBeApplied(decimal discount)
+        {
+            CartPOM cart = new CartPOM(_driver);
+           
+            Assert.That(cart.retrieveExpectedTotal(), Is.EqualTo(cart.retrieveTotal() *((100m-discount)/100m) +3.95m),
+                $"Coupon doesn't take off {discount}%");
+            cart.clearItem();
         }
     }
 }
