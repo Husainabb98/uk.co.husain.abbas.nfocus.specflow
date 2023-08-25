@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/uk.co.husain.abbas.nfocus.specflow/Features/LogIn.feature
+/uk.co.husain.abbas.nfocus.specflow/StepDefinitions/LogIn.cs
+/uk.co.husain.abbas.nfocus.specflow/StepDefinitions/NotLogin.cs
