@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static uk.co.husain.abbas.nfocus.specflow.StepDefinitions.Helpers;
 
 namespace uk.co.husain.abbas.nfocus.POMPages
 {
@@ -25,28 +27,51 @@ namespace uk.co.husain.abbas.nfocus.POMPages
         private IWebElement _postcode => _driver.FindElement(By.Id("billing_postcode"));
         private IWebElement _phone => _driver.FindElement(By.Id("billing_phone"));
         private IWebElement _placeOrder => _driver.FindElement(By.Id("place_order"));
-
-        public void enterInformation()
+        private IWebElement _orderNumber => WaitForElement(_driver, By.CssSelector(".woocommerce-order-overview__order.order > strong"),10);
+        
+        //method that allows the billing information to be entered
+        //and is also parameterised to allow the data to be in the testing file 
+        public void enterInformation(string fname, string lname, string address, 
+            string city, string postcode, string phone)
         {
             _fname.Clear();
-            _fname.SendKeys("gogog");
+            _fname.SendKeys(fname);
             _lname.Clear();
-            _lname.SendKeys("gg");
+            _lname.SendKeys(lname);
             _address.Clear();
-            _address.SendKeys("gogogo street");
+            _address.SendKeys(address);
             _city.Clear();
-            _city.SendKeys("gogogog city");
+            _city.SendKeys(city);
             _postcode.Clear();
-            _postcode.SendKeys("SW15 4JQ");
+            _postcode.SendKeys(postcode);
             _phone.Clear();
-            _phone.SendKeys("07777777777");
-            Thread.Sleep(1000);
-            _placeOrder.Click();
-
-            Thread.Sleep(1500);
-            Screenshot screenshot = _driver.TakeScreenshot();
-            screenshot.SaveAsFile("C:\\Users\\HusainAbbas\\source\\repos\\Screenshot\\order.png");
+            _phone.SendKeys(phone);
+         
+            //Screenshot screenshot = _driver.TakeScreenshot(); // need to fix 
+           // screenshot.SaveAsFile("C:\\Users\\HusainAbbas\\source\\repos\\Screenshot\\order.png");
         }
-
+        public void placeOrder()
+        {
+            try //placed in a try catch block to prevent stale element exception 
+            {
+                _placeOrder.Click();
+            }
+            catch (StaleElementReferenceException e)
+            {
+                _driver.Navigate().Refresh();
+                IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
+                js.ExecuteScript("arguments[0].click();", _placeOrder);
+            }
+        }
+        public string orderNumber()
+        {
+            string orderNumber = _orderNumber.Text;
+            return orderNumber;
+        }
+        public void screenshot()
+        {
+            Screenshot orderNumber = ((ITakesScreenshot)_orderNumber).GetScreenshot();
+            orderNumber.SaveAsFile(@".\..\order_number.png");
+        }
     }
 }

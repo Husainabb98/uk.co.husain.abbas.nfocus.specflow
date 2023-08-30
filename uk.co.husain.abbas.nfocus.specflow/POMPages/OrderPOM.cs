@@ -15,19 +15,13 @@ namespace uk.co.husain.abbas.nfocus.POMPages
         {
             _driver = driver;
         }
-        private IWebElement _orderNumber => _driver.FindElement(By.CssSelector("#post-6 > div > div > div > ul > li.woocommerce-order-overview__order.order > strong"));
-        private IWebElement _myAccount => _driver.FindElement(By.CssSelector("#menu-item-46 > a"));
-
-        public string orderNumber()
+       
+        private IWebElement _expectedOrderNumber => _driver.FindElement(By.CssSelector(" tr:nth-child(1) >[data-title=\"Order\"] >  a"));
+        public string expectedOrderNumber()
         {
-            return _orderNumber.Text;
-        }
-
-        public void myAccount()
-        {
-            _myAccount.Click();
-
-            
+            string orderNum = _expectedOrderNumber.Text;
+            orderNum = orderNum.Replace("#", "");
+            return orderNum;
         }
     }
 }

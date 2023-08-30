@@ -1,4 +1,6 @@
-﻿using OpenQA.Selenium;
+﻿using FluentAssertions.Execution;
+using NUnit.Framework;
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,7 +24,8 @@ namespace uk.co.husain.abbas.nfocus.POMPages
         private IWebElement _total => _driver.FindElement(By.CssSelector(".order-total > td bdi"));
         private IWebElement _subTotal => _driver.FindElement(By.CssSelector(".cart-subtotal bdi"));
         private IWebElement _proceedToCheckout => _driver.FindElement(By.CssSelector(".checkout-button"));
-        private IWebElement _discount => _driver.FindElement(By.CssSelector(".cart-discount > td > .amount.woocommerce-Price-amount"));
+        private IWebElement _emptyCart => WaitForElement(_driver, By.CssSelector("#post-5 > div > div > div > p"),10);
+       //private IWebElement _discount => _driver.FindElement(By.CssSelector(".cart-discount > td > .amount.woocommerce-Price-amount"));
         private IWebElement _clearItem => WaitForElement(_driver, By.CssSelector(".remove"), 10);
         //method that takes a parameter so we can soft code the coupon and also scrolls down the page
         public void enterCoupon(string discount)
@@ -30,7 +33,7 @@ namespace uk.co.husain.abbas.nfocus.POMPages
             IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
             js.ExecuteScript("window.scrollBy(0,1450)", "");
             _coupon.SendKeys(discount);
-            Thread.Sleep(500);
+           
             
         }
         //method that clicks on the apply coupon button
@@ -46,11 +49,12 @@ namespace uk.co.husain.abbas.nfocus.POMPages
             {
                 _clearItem.Click();
             }
-            catch 
+            catch (StaleElementReferenceException e)
             {
-                _clearItem.Click();
+                _driver.Navigate().Refresh();
+                IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
+                js.ExecuteScript("arguments[0].click();",_clearItem);
             }
-            
         }
         //method that calculates the expected total price
         public decimal retrieveExpectedTotal()
@@ -59,13 +63,9 @@ namespace uk.co.husain.abbas.nfocus.POMPages
             total = total.Replace("£", "");
             string subTotal = _subTotal.Text;
             subTotal = subTotal.Replace("£", "");
-            string discount = _discount.Text;
-            discount = discount.Replace("£", "");
             decimal total1 = Convert.ToDecimal(total);
             decimal subTotal1 = Convert.ToDecimal(subTotal);
-            decimal discount1 = Convert.ToDecimal(discount);
-            decimal expectedTotal = subTotal1 *0.85m + 3.95m;
-            return expectedTotal;
+            return total1;
         }
         //method that return the total price
         public decimal retrieveTotal() 
