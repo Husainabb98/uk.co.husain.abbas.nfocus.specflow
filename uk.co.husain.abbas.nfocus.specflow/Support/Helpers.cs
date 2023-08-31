@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace uk.co.husain.abbas.nfocus.specflow.StepDefinitions
+namespace uk.co.husain.abbas.nfocus.specflow.Support
 {
     internal static class Helpers
     {
@@ -14,7 +14,7 @@ namespace uk.co.husain.abbas.nfocus.specflow.StepDefinitions
         public static IWebElement WaitForElement(IWebDriver driver, By Locator, int TimeInSeconds = 5)
         {
             WebDriverWait explicitWait = new WebDriverWait(driver, TimeSpan.FromSeconds(TimeInSeconds));
-            explicitWait.Until(anythingatall => anythingatall.FindElement(Locator).Displayed);
+            explicitWait.Until(element => element.FindElement(Locator).Displayed);
             return driver.FindElement(Locator);
         }
     }

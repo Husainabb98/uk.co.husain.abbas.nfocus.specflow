@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static uk.co.husain.abbas.nfocus.specflow.StepDefinitions.Helpers;
+using static uk.co.husain.abbas.nfocus.specflow.Support.Helpers;
 
 namespace uk.co.husain.abbas.nfocus.POMPages
 {
@@ -32,15 +32,12 @@ namespace uk.co.husain.abbas.nfocus.POMPages
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
             js.ExecuteScript("window.scrollBy(0,1450)", "");
-            _coupon.SendKeys(discount);
-           
-            
+            _coupon.SendKeys(discount); 
         }
         //method that clicks on the apply coupon button
         public void applyCoupon()
         {
             _applyCoupon.Click();
-
         }
         //method that clears the items in cart, put in a try catch block to prevent stale element exception
         public void clearItem()
@@ -61,21 +58,15 @@ namespace uk.co.husain.abbas.nfocus.POMPages
         {
             string total = _total.Text;
             total = total.Replace("£", "");
-            string subTotal = _subTotal.Text;
-            subTotal = subTotal.Replace("£", "");
-            decimal total1 = Convert.ToDecimal(total);
-            decimal subTotal1 = Convert.ToDecimal(subTotal);
-            return total1;
+            return Convert.ToDecimal(total);
         }
         //method that return the total price
         public decimal retrieveTotal() 
         {
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
             string total = _subTotal.Text;
             total = total.Replace("£", "");
-            decimal total1 = Convert.ToDecimal(total);
-            return total1;
-
-
+            return Convert.ToDecimal(total);
         }
         //method that clicks on the proceed to checkout button and also scrolls down the page
         public void proceedToCheckOut()

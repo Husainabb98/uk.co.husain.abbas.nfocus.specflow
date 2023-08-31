@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static uk.co.husain.abbas.nfocus.specflow.StepDefinitions.Helpers;
+using static uk.co.husain.abbas.nfocus.specflow.Support.Helpers;
 
 namespace uk.co.husain.abbas.nfocus.POMPages
 {
