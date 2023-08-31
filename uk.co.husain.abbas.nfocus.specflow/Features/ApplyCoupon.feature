@@ -6,7 +6,7 @@ so that I can get the correct discounted price and proceed to checkout
 Background: 
 Given that the user is logged in
  
-
+@Test1
 Scenario Outline: Applying coupon on the items in cart
     Given the user has '<items>' in the cart
     When the user applies the coupon 'edgewords'
@@ -17,6 +17,7 @@ Scenario Outline: Applying coupon on the items in cart
     | Polo   |
     | Tshirt |
 
+@Test2
 Scenario: Verifying the order number
     Given the user has proceeded to checkout
     When the user enters billing information and places order
