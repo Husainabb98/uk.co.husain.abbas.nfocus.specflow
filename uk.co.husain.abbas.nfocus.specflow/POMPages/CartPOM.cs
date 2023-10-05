@@ -14,14 +14,13 @@ namespace uk.co.husain.abbas.nfocus.POMPages
     internal class CartPOM
     {
         private IWebDriver _driver;
-
         public CartPOM(IWebDriver driver)
         {
             _driver = driver;
         }
         private IWebElement _coupon => _driver.FindElement(By.Id("coupon_code"));
         private IWebElement _applyCoupon => _driver.FindElement(By.CssSelector("button[name='apply_coupon']"));
-        private IWebElement _total => _driver.FindElement(By.CssSelector(".order-total > td bdi"));
+        private IWebElement _total => WaitForElement(_driver, By.CssSelector(".order-total > td bdi"),10);
         private IWebElement _subTotal => _driver.FindElement(By.CssSelector(".cart-subtotal bdi"));
         private IWebElement _proceedToCheckout => _driver.FindElement(By.CssSelector(".checkout-button"));
         private IWebElement _emptyCart => WaitForElement(_driver, By.CssSelector("#post-5 > div > div > div > p"),10);
@@ -35,9 +34,25 @@ namespace uk.co.husain.abbas.nfocus.POMPages
             _coupon.SendKeys(discount); 
         }
         //method that clicks on the apply coupon button
-        public void applyCoupon()
+        public decimal applyCoupon()
         {
-            _applyCoupon.Click();
+            try
+            {
+                _applyCoupon.Click();
+                string total = _total.Text;
+                total = total.Replace("£", "");
+                return Convert.ToDecimal(total);
+            }
+            catch
+            {
+                _applyCoupon.Click();
+                _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1.5);
+                string total = _total.Text;
+                total = total.Replace("£", "");
+                return Convert.ToDecimal(total);
+            }
+            
+            
         }
         //method that clears the items in cart, put in a try catch block to prevent stale element exception
         public void clearItem()
@@ -56,6 +71,7 @@ namespace uk.co.husain.abbas.nfocus.POMPages
         //method that calculates the expected total price
         public decimal retrieveExpectedTotal()
         {
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1.5);
             string total = _total.Text;
             total = total.Replace("£", "");
             return Convert.ToDecimal(total);
@@ -63,7 +79,7 @@ namespace uk.co.husain.abbas.nfocus.POMPages
         //method that return the total price
         public decimal retrieveTotal() 
         {
-            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
+            
             string total = _subTotal.Text;
             total = total.Replace("£", "");
             return Convert.ToDecimal(total);

@@ -46,7 +46,6 @@ namespace uk.co.husain.abbas.nfocus.specflow.StepDefinitions
             CartPOM cart = new CartPOM(_driver);
             cart.enterCoupon(discount);
             cart.applyCoupon();
-            _scenarioContext["ExpectedTotal"] = cart.retrieveExpectedTotal();
         }
         //method that verifies that discount applied from the coupon is correct
         [Then(@"the discount '([^']*)'% should be applied")]
@@ -56,7 +55,7 @@ namespace uk.co.husain.abbas.nfocus.specflow.StepDefinitions
             try
             {
                 CartPOM cart = new CartPOM(_driver);
-                Assert.That((decimal)_scenarioContext["ExpectedTotal"], Is.EqualTo(cart.retrieveTotal() * ((100m - discount) / 100m) + 3.95m),
+                Assert.That(cart.applyCoupon(), Is.EqualTo(cart.retrieveTotal() * ((100m - discount) / 100m) + 3.95m),
                     $"Coupon doesn't take off {discount}%");
                 cart.clearItem();
             }
@@ -120,6 +119,8 @@ namespace uk.co.husain.abbas.nfocus.specflow.StepDefinitions
                "Didn't get the expected order number");
             MyAccountPOM myAccount = new MyAccountPOM(_driver);
             myAccount.logout();
+            Console.WriteLine(expectedOrderNumber);
+            Console.WriteLine((string)_scenarioContext["orderNumber"]);
         }
     }
 }
